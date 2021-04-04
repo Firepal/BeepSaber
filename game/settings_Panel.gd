@@ -95,8 +95,8 @@ func _on_right_sable_col_color_changed(color,overwrite=true):
 
 func _on_saber_tail_toggled(button_pressed,overwrite=true):
 	if button_pressed:
-		game.left_saber.set_tail_size(3)
-		game.right_saber.set_tail_size(3)
+		game.left_saber.set_tail_size(18)
+		game.right_saber.set_tail_size(18)
 	else:
 		game.left_saber.set_tail_size(0)
 		game.right_saber.set_tail_size(0)

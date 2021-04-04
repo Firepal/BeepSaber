@@ -4,7 +4,8 @@
 extends Area
 
 # store the saber material in a variable so the main game can set the color on initialize
-onready var _mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
+onready var _saber_mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
+onready var _glow_mat : ShaderMaterial = $Glow_Mesh.mesh.surface_get_material(0);
 onready var _anim := $AnimationPlayer;
 
 # the type of note this saber can cut (set in the game main)
@@ -31,14 +32,14 @@ func hide():
 func set_thickness(value):
 	$LightSaber_Mesh.scale.x = value
 	$LightSaber_Mesh.scale.y = value
-	
-func set_tail_size(size=3):
-	max_pos = size
+
+func set_tail_size(size=18):
+	imm_geo.max_points = size
 
 func set_color(color):
-	_mat.set_shader_param("color", color);
+	_saber_mat.set_shader_param("color", color);
+	_glow_mat.set_shader_param("color", color);
 	imm_geo.material_override.set_shader_param("color", color);
-	
 
 func _ready():
 	imm_geo.material_override = imm_geo.material_override.duplicate()
@@ -46,31 +47,9 @@ func _ready():
 	remove_child(imm_geo)
 	get_tree().get_root().add_child(imm_geo)
 
-var last_pos = []
-var max_pos = 3
 func _process(delta):
 	if is_extended():
-		var pos = [$base.global_transform.origin,$tip.global_transform.origin]
-		imm_geo.clear()
-		imm_geo.begin(Mesh.PRIMITIVE_TRIANGLES)
-		
-		for i in range(last_pos.size()):
-			var posA = pos
-			if i > 0:
-				posA = last_pos[i-1]
-			var posB = last_pos[i]
-			
-			imm_geo.add_vertex(pos[0])
-			imm_geo.add_vertex(posA[1])
-			imm_geo.add_vertex(posB[1])
-			
-		imm_geo.end()
-		
-		last_pos.insert(0,pos)
-		while last_pos.size() > max_pos:
-			last_pos.remove(last_pos.size()-1)
-		
-		#check floor collision for burn mark
+		# Check floor collision for burn mark
 		$RayCast.force_raycast_update()
 		if $RayCast.is_colliding():
 			var raycoli = $RayCast.get_collider()

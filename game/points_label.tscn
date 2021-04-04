@@ -2,9 +2,10 @@
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/points_label.gd" type="Script" id=2]
-[ext_resource path="res://game/data/beepcube_cut.ogg" type="AudioStream" id=3]
+[ext_resource path="res://game/data/saberslice.wav" type="AudioStream" id=3]
 
 [sub_resource type="ViewportTexture" id=1]
+flags = 4
 viewport_path = NodePath("Viewport")
 
 [sub_resource type="SpatialMaterial" id=2]

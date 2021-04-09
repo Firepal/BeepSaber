@@ -527,7 +527,7 @@ func _display_points():
 # perform the necessay computations to cut a cube with the saber
 func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	# perform haptic feedback for the cut
-	controller.simple_rumble(0.75, 0.1);
+	controller.simple_rumble(0.75, 0.15);
 	var o = controller.global_transform.origin;
 	var saber_end : Vector3
 	var saber_end_past : Vector3

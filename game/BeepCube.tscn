@@ -2,7 +2,7 @@
 
 [ext_resource path="res://game/data/BeepCube.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://game/BeepCube.gd" type="Script" id=2]
-[ext_resource path="res://game/BeepCube_new_material.material" type="Material" id=3]
+[ext_resource path="res://game/BeepCube_material.tres" type="Material" id=3]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.2, 0.2, 0.2 )

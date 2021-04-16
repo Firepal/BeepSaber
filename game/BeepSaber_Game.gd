@@ -12,7 +12,8 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
-onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
+onready var cube_material_template = preload("res://game/BeepCube_material.tres");
+onready var cube_cut_script = preload("res://game/BeepCube_CutFadeout.gd");
 
 var cube_left = null
 var cube_right = null
@@ -420,7 +421,6 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	rigid_body_half.add_to_group("cutted_cube")
 	rigid_body_half.collision_layer = 8
 	rigid_body_half.collision_mask = 0
-	rigid_body_half.gravity_scale = 2
 	
 	# the original cube mesh
 	var cutted_cube = MeshInstance.new();
@@ -432,13 +432,12 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	cutted_cube.material_override.set_shader_param("cutted",true)
 	cutted_cube.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
 	var saber_end_mov = saber_ends[0]-saber_ends[1]
+	
+	# TODO: generate cut transform instead of using cut_pos and cut_angle
 	var saber_end_angle = rad2deg(Vector2(saber_end_mov.x,saber_end_mov.y).angle())
 	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-cutted_cube.rotation_degrees.z))+180)%360)-180
 	cutted_cube.material_override.set_shader_param("cut_angle",saber_end_angle_rel)
-	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
-		cutted_cube.material_override.set_shader_param("cut_pos",-cut_distance*3)
-	else:
-		cutted_cube.material_override.set_shader_param("cut_pos",cut_distance*3)
+	cutted_cube.material_override.set_shader_param("cut_pos",cut_distance)
 
 	# transform the normal into the orientation of the actual cube mesh
 	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
@@ -451,25 +450,23 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
 	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
 	rigid_body_half.add_child(coll);
-
+	
 	# set a phyiscs material for some more bouncy behaviour
 	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat");
-
+	
 	rigid_body_half.add_child(cutted_cube);
-	add_child(rigid_body_half);
-	rigid_body_half.global_transform = cube.global_transform;
-
+	
+	# handles the fade-out and free
+	rigid_body_half.set_script(cube_cut_script)
+	
+	add_child(rigid_body_half)
+	
+	rigid_body_half.global_transform = cube.global_transform
+	
 	# some impulse so the cube halfs get some movement
-#	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
-	rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
-#	else:
-#		rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
-
-	# delete the rigid body after 2 seconds; this only works here because we are
-	# at the end of this function and do not need the rigid body for anything else
-	yield(get_tree().create_timer(2.0), "timeout")
-	if rigid_body_half:
-		rigid_body_half.queue_free()
+	rigid_body_half.apply_central_impulse((saber_end_mov*20)
+										+ (_sign*cutplane.normal*(saber_end_mov*6).length_squared()))
+	rigid_body_half.apply_torque_impulse( Vector3(0,0,_sign) * -saber_end_mov.length_squared() );
 
 
 

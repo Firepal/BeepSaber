@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+render_mode unshaded;
+
+varying float lifetime;
+void vertex(){
+	vec3 camvec = -(CAMERA_MATRIX[3].xyz-WORLD_MATRIX[3].xyz) * mat3(WORLD_MATRIX);
+	camvec *= vec3(1.0,0.0,1.0);
+	vec3 a = normalize(cross(camvec,vec3(0.0,1.0,0.0)));
+	vec3 c = normalize(camvec);
+	vec3 b = cross(a,c);
+	mat3 facecam = mat3(a,b,c);
+	VERTEX = (facecam*VERTEX)+vec3(0.0,0.08,0.0);
+	NORMAL = (facecam*NORMAL);
+	lifetime = 1.0-INSTANCE_CUSTOM.y;
+//	lifetime *= dot(NORMAL,camvec);
+}
+
+uniform vec4 color : hint_color;
+void fragment(){
+	vec2 customUV = UV;
+	customUV.y = pow(customUV.y,5.0);
+	customUV = (customUV*2.0)-1.0;
+	float glow = 1.0-dot(customUV,customUV);
+	ALBEDO = mix(color.rgb,vec3(1.0),glow);
+	ALPHA = glow*lifetime;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/color = Color( 0.12549, 0, 1, 1 )
+
+[sub_resource type="QuadMesh" id=3]
+resource_local_to_scene = true
+material = SubResource( 2 )
+size = Vector2( 0.01, 0.2 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends CPUParticles
+
+func _ready():
+	# set in BeepSaber_Game: _create_cut_rigid_body
+	mesh.surface_get_material(0).set_shader_param(\"color\",color)
+
+onready var killtime = lifetime*5
+var timer = 0.0;
+
+func _process(delta):
+	timer += delta;
+	if timer > killtime:
+		queue_free()
+"
+
+[node name="CPUParticles" type="CPUParticles"]
+amount = 32
+lifetime = 0.8
+explosiveness = 1.0
+mesh = SubResource( 3 )
+emission_shape = 2
+emission_box_extents = Vector3( 0, 0.2, 0.8 )
+flag_align_y = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 2.0
+initial_velocity_random = 0.32
+radial_accel = -6.45
+script = SubResource( 4 )

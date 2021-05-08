@@ -12,6 +12,8 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
+
+onready var cube_particle_template = preload("res://game/BeepCube_CutParticles.tscn").instance();
 onready var cube_material_template = preload("res://game/BeepCube_material.tres");
 onready var cube_cut_script = preload("res://game/BeepCube_CutFadeout.gd");
 
@@ -467,7 +469,18 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	rigid_body_half.apply_central_impulse((saber_end_mov*20)
 										+ (_sign*cutplane.normal*(saber_end_mov*6).length_squared()))
 	rigid_body_half.apply_torque_impulse( Vector3(0,0,_sign) * -saber_end_mov.length_squared() );
-
+	
+	# particle effect on cut
+	var new_particle = cube_particle_template.duplicate();
+	
+	if _sign == 1: new_particle.color = COLOR_LEFT
+	else: new_particle.color = COLOR_RIGHT
+	new_particle.initial_velocity *= (saber_end_mov*10).length_squared();
+	new_particle.one_shot = true;
+	track.add_child(new_particle)
+	new_particle.global_transform = cube._cube_mesh_orientation.global_transform
+	new_particle.rotation_degrees.z += saber_end_angle_rel
+	new_particle.emitting = true;
 
 
 func _reset_combo():

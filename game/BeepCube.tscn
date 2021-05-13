@@ -2,10 +2,10 @@
 
 [ext_resource path="res://game/data/BeepCube.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://game/BeepCube.gd" type="Script" id=2]
-[ext_resource path="res://game/data/BeepCube_Emission.png" type="Texture" id=3]
+[ext_resource path="res://game/BeepCube_material.tres" type="Material" id=3]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 0.2, 0.2, 0.2 )
+extents = Vector3( 0.32, 0.23, 0.4 )
 
 [sub_resource type="Shader" id=2]
 code = "shader_type spatial;
@@ -87,7 +87,7 @@ tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
 "times": PoolRealArray( 0, 0.8 ),
-"transitions": PoolRealArray( 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector3( 0, 0, -2 ), Vector3( 0, 0, 0 ) ]
 }
@@ -98,17 +98,17 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.6, 0.8 ),
-"transitions": PoolRealArray( 0.217638, -0.5, 1 ),
+"times": PoolRealArray( 0, 0.4, 0.8 ),
+"transitions": PoolRealArray( 0.5, -2, 1 ),
 "update": 0,
-"values": [ Vector3( 0, 0, -90 ), Vector3( 0, 0, 5 ), Vector3( 0, 0, 0 ) ]
+"values": [ Vector3( 0, 0, -180 ), Vector3( 0, 0, 10 ), Vector3( 0, 0, 0 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath(".:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
-tracks/2/enabled = true
+tracks/2/enabled = false
 tracks/2/keys = {
 "times": PoolRealArray( 0, 0.8 ),
 "transitions": PoolRealArray( 0.1, 1 ),
@@ -128,6 +128,7 @@ collision_layer = 2
 collision_mask = 16
 
 [node name="CollisionShape" type="CollisionShape" parent="CubeMeshOrientation/BeepCube_Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.2 )
 shape = SubResource( 1 )
 
 [node name="CubeMeshAnimation" type="Spatial" parent="CubeMeshOrientation"]

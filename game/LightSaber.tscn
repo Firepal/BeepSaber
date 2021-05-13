@@ -448,6 +448,10 @@ shader_param/size = 4
 material = SubResource( 12 )
 size = Vector2( 1, 1.281 )
 
+[sub_resource type="QuadMesh" id=13]
+material = SubResource( 12 )
+size = Vector2( 1, 1.281 )
+
 [node name="LightSaber" type="Area"]
 transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
 collision_layer = 16

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/saberslice.wav-46135ff20ee0ec6d22f5352e02cece78.sample"
+
+[deps]
+
+source_file="res://game/data/saberslice.wav"
+dest_files=[ "res://.import/saberslice.wav-46135ff20ee0ec6d22f5352e02cece78.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=true
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

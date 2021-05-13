@@ -9,6 +9,7 @@
 size = Vector2( 0.5, 0.5 )
 
 [sub_resource type="ViewportTexture" id=3]
+flags = 4
 viewport_path = NodePath("Viewport")
 
 [sub_resource type="SpatialMaterial" id=4]
@@ -16,10 +17,10 @@ resource_local_to_scene = true
 flags_unshaded = true
 albedo_texture = SubResource( 3 )
 
-[sub_resource type="CanvasItemMaterial" id=6]
+[sub_resource type="CanvasItemMaterial" id=5]
 blend_mode = 1
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 1, 1, 1, 1 )
 border_width_left = 8
 border_width_top = 8
@@ -74,12 +75,12 @@ __meta__ = {
 position = Vector2( -64, -64 )
 
 [node name="sprite" type="Panel" parent="Viewport/ColorRect/burn_l"]
-material = SubResource( 6 )
+material = SubResource( 5 )
 margin_left = -12.0
 margin_top = -12.0
 margin_right = 12.0
 margin_bottom = 12.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -88,12 +89,12 @@ __meta__ = {
 position = Vector2( -64, -64 )
 
 [node name="sprite" type="Panel" parent="Viewport/ColorRect/burn_r"]
-material = SubResource( 6 )
+material = SubResource( 5 )
 margin_left = -12.0
 margin_top = -12.0
 margin_right = 12.0
 margin_bottom = 12.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

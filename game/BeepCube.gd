@@ -32,4 +32,3 @@ func duplicate_create(color : Color):
 
 func update_color_only(color : Color):
 	_mat.set_shader_param("albedo",color);
-

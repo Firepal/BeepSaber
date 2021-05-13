@@ -2,6 +2,8 @@
 #
 extends Spatial
 
+onready var head := $OQ_ARVROrigin/OQ_ARVRCamera;
+
 onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
 onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
 
@@ -461,7 +463,9 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 
 	# some impulse so the cube halfs get some movement
 #	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
-	rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
+#	rigid_body_half.apply_central_impulse((_sign) * cutted_cube.transform.basis.y);
+	rigid_body_half.apply_central_impulse((saber_end_mov * 20) + cutplane.normal);
+	rigid_body_half.apply_torque_impulse( Vector3(0,0,_sign) * -0.25 );
 #	else:
 #		rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
 
@@ -527,7 +531,7 @@ func _display_points():
 # perform the necessay computations to cut a cube with the saber
 func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	# perform haptic feedback for the cut
-	controller.simple_rumble(0.75, 0.1);
+	controller.simple_rumble(0.75, 0.15);
 	var o = controller.global_transform.origin;
 	var saber_end : Vector3
 	var saber_end_past : Vector3
@@ -566,7 +570,7 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 
 	#vr.show_dbg_info("cut_accuracy", str(beat_accuracy) + ", " + str(cut_angle_accuracy) + ", " + str(cut_distance_accuracy) + ", " + str(travel_distance_factor));
 	# delete the original cube; we have two new halfs created above
-	cube.queue_free();
+	cube.queue_free()
 
 # quiets song when player enters into a wall
 func _quiet_song():

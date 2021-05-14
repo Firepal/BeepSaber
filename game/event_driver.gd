@@ -153,7 +153,8 @@ func change_light_color(type,color=-1,transition_mode=0):
 	
 	if not color is Color:
 		for m in material:
-			m.albedo_color = Color.black
+				if m is SpatialMaterial:
+					m.albedo_color = Color.black
 		tween.stop_all()
 		$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%int(type),0.0)
 		group.visible = false
@@ -166,24 +167,31 @@ func change_light_color(type,color=-1,transition_mode=0):
 	match transition_mode:
 		0:
 			for m in material:
-				m.albedo_color = color
+				if m is SpatialMaterial:
+					m.albedo_color = color
+				else:
+					m.set_shader_param("color",color)
 			$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%int(type),color.v)
 			group.visible = true
 		1:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",color*3,color,0.3,Tween.TRANS_LINEAR,Tween.EASE_OUT)
-			tween.start()
-			group.visible = true
+				if m is SpatialMaterial:
+					tween.interpolate_property(m,"albedo_color",color*3,color,0.3,Tween.TRANS_LINEAR,Tween.EASE_OUT)
+				tween.start()
+				group.visible = true
 		2:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",color*3,Color(0,0,0),1,Tween.TRANS_QUAD,Tween.EASE_IN)
+				if m is SpatialMaterial:
+					tween.interpolate_property(m,"albedo_color",color*3,Color(0,0,0),1,Tween.TRANS_QUAD,Tween.EASE_IN)
 			tween.start()
 			group.visible = true
 			yield(tween,"tween_completed")
-			if material[0].albedo_color == Color(0,0,0):
-				group.visible = false
+			
+			if material[0] is SpatialMaterial:
+				if material[0].albedo_color == Color(0,0,0):
+					group.visible = false
 			
 
 func _on_Tween_tween_step(object, key, elapsed, value : Color, id):

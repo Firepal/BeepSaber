@@ -1,0 +1,42 @@
+[gd_resource type="QuadMesh" load_steps=3 format=2]
+
+[sub_resource type="Shader" id=10]
+code = "shader_type spatial;
+render_mode unshaded,blend_add;
+
+mat3 facevec(vec3 vector){
+	vec3 c = normalize(vector);
+	vec3 a = normalize(cross(c,vec3(0.0,1.0,0.0)));
+	vec3 b = normalize(cross(a,c));
+	return mat3(a,b,c);
+}
+
+varying vec3 scale;
+void vertex(){
+	vec3 cam_position = (WORLD_MATRIX[3].xyz-CAMERA_MATRIX[3].xyz)*mat3(WORLD_MATRIX);
+	cam_position *= 1.0-vec3(0.0,1.0,0.0);
+	VERTEX = facevec(cam_position)*VERTEX;
+	UV = (UV*2.0)-1.0;
+	scale.x = length(WORLD_MATRIX[0].xyz);
+	scale.y = length(WORLD_MATRIX[1].xyz);
+	scale.z = length(WORLD_MATRIX[2].xyz);
+}
+
+uniform vec4 color : hint_color;
+void fragment(){
+//	vec2 glowv = smoothstep(1.0,0.2,abs(UV));
+//	float glow = glowv.x*glowv.y;
+	float glow = 1.0-pow(smoothstep(0.02,1.0,abs(UV.x)),0.3);
+	float glowend = smoothstep(1.0,0.0,pow(abs(UV.y),1.0/scale.y));
+	glow *= glowend;
+	ALBEDO = mix(color.rgb,vec3(1.0),glow);
+	ALPHA = glow;
+}"
+
+[sub_resource type="ShaderMaterial" id=24]
+shader = SubResource( 10 )
+shader_param/color = Color( 0, 1, 0.0156863, 1 )
+
+[resource]
+material = SubResource( 24 )
+size = Vector2( 10, 16 )

@@ -13,7 +13,7 @@ mat3 facecam(vec3 vector){
 	return mat3(a,b,c);
 }
 
-varying float fresnel;
+varying vec3 customview;
 void vertex(){
 	vec3 wVertex = (WORLD_MATRIX * vec4(VERTEX,1.0)).xyz;
 	vec3 cam_position = (wVertex-CAMERA_MATRIX[3].xyz)*mat3(WORLD_MATRIX);
@@ -24,21 +24,19 @@ void vertex(){
 	vec3 viewball = unlocked*vec3(0.0,0.0,-1.0);
 	vec3 viewlocked = locked*vec3(0.0,0.0,-1.0);
 	
-	if (classic){
-	fresnel = 1.0-dot(viewball, NORMAL);
-	fresnel = smoothstep(0.0, 0.3, fresnel);
-	} else {
-	vec3 customview = mix(viewlocked,viewball,is_ball);
-	fresnel = pow(1.6-dot(normalize(customview), NORMAL),3.0);
-	}
+	vec3 view = mix(viewlocked,viewball,is_ball);
+	customview = normalize(mat3(MODELVIEW_MATRIX)*view);
 	float sizingfactor = float(size);
 	UV.x = (UV.x*sizingfactor);
 	UV.y *= 35.0*sizingfactor;
 }
 
 void fragment() {
-	vec2 customUV = floor( (UV*10.0) + vec2(TIME*8.0,0.0) );
-	int cool_formula = int( dot(vec2(customUV*1.4),customUV) );
-	float yes = float((cool_formula % size) )/float(size-1);
-	ALBEDO = mix(vec3( step(0.95,yes) )*smoothstep(1.0,0.0,-VERTEX.z), color.rgb, fresnel);
+	vec2 customUV = floor( (UV*3.0) + vec2(TIME*6.0,0.0) );
+	int cool_formula = int( dot(vec2(customUV),customUV) );
+	float yes = float((cool_formula % size) )/float(size);
+//	ALBEDO = mix(vec3( step(0.95,yes) )*smoothstep(1.0,0.0,-VERTEX.z), color.rgb, fresnel);
+	float v = dot(NORMAL,customview);
+	v = smoothstep(1.0,0.85,v);
+	ALBEDO = mix(color.rgb,vec3(1.0),v+(yes));
 }

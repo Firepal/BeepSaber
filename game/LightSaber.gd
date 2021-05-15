@@ -6,6 +6,7 @@ extends Area
 # store the saber material in a variable so the main game can set the color on initialize
 onready var _saber_mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
 onready var _glow_mat : ShaderMaterial = $Glow_Mesh.mesh.surface_get_material(0);
+onready var _hilt_mat : ShaderMaterial = $Hilt_Mesh.get_active_material(0);
 onready var _anim := $AnimationPlayer;
 
 # the type of note this saber can cut (set in the game main)
@@ -29,16 +30,16 @@ func hide():
 	if (is_extended() and _anim.current_animation != "QuickHide"):
 		_anim.play("Hide");
 
-func set_thickness(value):
-	$LightSaber_Mesh.scale.x = value
-	$LightSaber_Mesh.scale.y = value
-
-func set_tail_size(size=18):
-	imm_geo.max_points = size
+func set_trail_smooth(value):
+	imm_geo.interp = value
+	
+func set_trail_length(value):
+	imm_geo.max_points = value
 
 func set_color(color):
 	_saber_mat.set_shader_param("color", color);
 	_glow_mat.set_shader_param("color", color);
+	_hilt_mat.set_shader_param("color", color);
 	imm_geo.material_override.set_shader_param("color", color);
 
 func _ready():

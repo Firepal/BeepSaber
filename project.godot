@@ -74,6 +74,7 @@ vr="*res://OQ_Toolkit/vr_autoload.gd"
 
 window/size/width=960
 window/size/height=540
+window/vsync/use_vsync=false
 
 [gdnative]
 
@@ -140,7 +141,7 @@ ui_end={
 
 [physics]
 
-common/physics_fps=72
+common/physics_fps=90
 common/physics_jitter_fix=0.0
 3d/physics_engine="Bullet"
 
@@ -157,6 +158,7 @@ quality/reflections/high_quality_ggx=false
 quality/shading/force_vertex_shading.mobile=false
 quality/shading/force_lambert_over_burley=true
 quality/shading/force_blinn_over_ggx.mobile=false
+gles2/compatibility/enable_high_float.Android=true
 environment/default_clear_color=Color( 0, 0, 0, 1 )
 quality/filters/msaa=6
 quality/depth/hdr=false

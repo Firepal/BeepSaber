@@ -308,7 +308,7 @@ var _need_settings_refresh = false;
 
 func _initialize_OVR_API():
 	# load all native interfaces to the vrApi
-	var OvrDisplayRefreshRate = load("res://addons/godot_ovrmobile/OvrDisplayRefreshRate.gdns");
+	var OvrDisplayRefreshRate = load("res://addons/godot_ovrmobile/OvrDisplay.gdns");
 	var OvrGuardianSystem = load("res://addons/godot_ovrmobile/OvrGuardianSystem.gdns");
 	var OvrInitConfig = load("res://addons/godot_ovrmobile/OvrInitConfig.gdns");
 	var OvrPerformance = load("res://addons/godot_ovrmobile/OvrPerformance.gdns");
@@ -367,12 +367,12 @@ func _notification(what):
 # the settings cache used to refresh the settings after an app pause; these are also the default settings
 # make sure to update _refresh_settings() and the respective setter wrapper methods when this needs to be changed
 var oculus_mobile_settings_cache = {
-	"display_refresh_rate" : 72,
+	"display_refresh_rate" : 90,
 	"boundary_visible" : false,
 	"tracking_space" : ovrVrApiTypes.OvrTrackingSpace.VRAPI_TRACKING_SPACE_LOCAL_FLOOR,
 	"default_layer_color_scale" : Color(1.0, 1.0, 1.0, 1.0),
 	"extra_latency_mode" : ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_ON,
-	"foveation_level" : FoveatedRenderingLevel.Off,
+	"foveation_level" : FoveatedRenderingLevel.High,
 	"foveation_dynamic" : 0,
 	"swap_interval" : 1,
 	"clock_levels_cpu" : 2,
@@ -726,12 +726,13 @@ func initialize(initialize_vr = true):
 	
 	if arvr_ovr_mobile_interface:
 		log_info("  Found OVRMobile Interface.");
+		_initialize_OVR_API();
+		ovrInitConfig.set_render_target_size_multiplier(1.25)
 		if arvr_ovr_mobile_interface.initialize():
 			active_arvr_interface_name = "OVRMobile";
 			get_viewport().arvr = true;
-			Engine.target_fps = 72; # TODO: only true for Oculus Quest; query the info here
+#			Engine.target_fps = 72;
 			inVR = true;
-			_initialize_OVR_API();
 			# this will initialize the default
 			_refresh_settings();
 			log_info("  Success initializing OVRMobile Interface.");

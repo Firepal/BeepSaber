@@ -17,7 +17,7 @@ onready var _mesh_orientation = $WallMeshOrientation
 onready var _mesh = $WallMeshOrientation/WallMesh
 onready var _coll = $WallMeshOrientation/WallArea/CollisionShape
 
-var wall_material = preload("res://game/Wall/wall.material");
+var wall_material = preload("res://game/Wall/wall_new.material");
 
 func _ready():
 	# play the spawn animation when wall enters the scene
@@ -29,6 +29,7 @@ func _set_width(value):
 	if not _mesh:
 		yield(self,"ready")
 		
+	wall_material.set_shader_param("width",width)
 	_mesh.mesh.size.x = width
 	_coll.shape.extents.x = width / 2.0
 	_mesh_orientation.translation.x = width / 2.0
@@ -39,6 +40,7 @@ func _set_height(value):
 	if not _mesh:
 		yield(self,"ready")
 		
+	wall_material.set_shader_param("height",height)
 	_mesh.mesh.size.y = height
 	_coll.shape.extents.y = height / 2.0
 	_mesh_orientation.translation.y = height / 2.0
@@ -49,6 +51,7 @@ func _set_depth(value):
 	if not _mesh:
 		yield(self,"ready")
 		
+	wall_material.set_shader_param("depth",depth)
 	_mesh.mesh.size.z = depth
 	_coll.shape.extents.z = depth / 2.0
 	_mesh_orientation.translation.z = -1 * depth / 2.0

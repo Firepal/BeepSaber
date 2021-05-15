@@ -469,20 +469,20 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	
 	# some impulse so the cube halfs get some movement
 	rigid_body_half.apply_central_impulse((saber_end_mov*20)
-										+ (_sign*cutplane.normal*(saber_end_mov*6).length_squared()))
-	rigid_body_half.apply_torque_impulse( Vector3(0,0,_sign) * -saber_end_mov.length_squared() );
+										+ (_sign*cutplane.normal*(saber_end_mov).length()*6))
+	rigid_body_half.apply_torque_impulse( Vector3(0,0,_sign) * -saber_end_mov.length() );
 	
 	# particle effect on cut
-	var new_particle = cube_particle_template.duplicate();
-	
-	if _sign == 1: new_particle.color = COLOR_LEFT
-	else: new_particle.color = COLOR_RIGHT
-	new_particle.initial_velocity *= (saber_end_mov*10).length_squared();
-	new_particle.one_shot = true;
-	track.add_child(new_particle)
-	new_particle.global_transform = cube._cube_mesh_orientation.global_transform
-	new_particle.rotation_degrees.z += saber_end_angle_rel
-	new_particle.emitting = true;
+#	var new_particle = cube_particle_template.duplicate();
+#
+#	if _sign == 1: new_particle.color = COLOR_LEFT
+#	else: new_particle.color = COLOR_RIGHT
+#	new_particle.initial_velocity *= (saber_end_mov*10).length_squared();
+#	new_particle.one_shot = true;
+#	track.add_child(new_particle)
+#	new_particle.global_transform = cube._cube_mesh_orientation.global_transform
+#	new_particle.rotation_degrees.z += saber_end_angle_rel
+#	new_particle.emitting = true;
 
 
 func _reset_combo():

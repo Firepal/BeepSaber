@@ -3,11 +3,11 @@ extends Panel
 export(NodePath) var game;
 onready var file = File.new()
 var savedata = {
-	thickness=100,
+	trail_length=18,
+	trail_smooth=1,
 	cube_cuts_falloff=true,
 	COLOR_LEFT = Color("ff1a1a"),
 	COLOR_RIGHT = Color("1a1aff"),
-	saber_tail = true,
 	glare = false,
 	events = true
 }
@@ -25,15 +25,17 @@ func _ready():
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
-	_on_HSlider_value_changed(savedata.thickness,false)
 	_on_cuttedBlocks_toggled(savedata.cube_cuts_falloff,false)
 	_on_left_sable_col_color_changed(savedata.COLOR_LEFT,false)
 	_on_right_sable_col_color_changed(savedata.COLOR_RIGHT,false)
-	_on_saber_tail_toggled(savedata.saber_tail,false)
 	if savedata.has("glare"):
 		_on_glare_toggled(savedata.glare,false)
 	if savedata.has("events"):
 		_on_d_background_toggled(savedata.events,false)
+	if savedata.has("trail_length"):
+		_on_trail_slider_changed(savedata.trail_length,false)
+	if savedata.has("trail_smooth"):
+		_on_trail_smooth_slider_changed(savedata.trail_smooth,false)
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -47,17 +49,25 @@ func _on_Button_button_up():
 
 
 #settings down here
-func _on_HSlider_value_changed(value,overwrite=true):
-	game.left_saber.set_thickness(float(value)/100);
-	game.right_saber.set_thickness(float(value)/100);
+func _on_trail_slider_changed(value,overwrite=true):
+	game.left_saber.set_trail_length(value);
+	game.right_saber.set_trail_length(value);
 	
 	if overwrite:
-		savedata.thickness = value
+		savedata.trail_length = value
 		save_current_settings()
 	else:
-		$saber_thicknes.value = value
+		$saber_trail.value = value
 
-
+func _on_trail_smooth_slider_changed(value,overwrite=true):
+	game.left_saber.set_trail_smooth(value);
+	game.right_saber.set_trail_smooth(value);
+	
+	if overwrite:
+		savedata.trail_smooth = value
+		save_current_settings()
+	else:
+		$saber_trail_smooth.value = value
 
 func _on_cuttedBlocks_toggled(button_pressed,overwrite=true):
 	game.cube_cuts_falloff = button_pressed;
@@ -92,22 +102,6 @@ func _on_right_sable_col_color_changed(color,overwrite=true):
 	else:
 		$right_sable_col.color = color
 
-
-func _on_saber_tail_toggled(button_pressed,overwrite=true):
-	if button_pressed:
-		game.left_saber.set_tail_size(18)
-		game.right_saber.set_tail_size(18)
-	else:
-		game.left_saber.set_tail_size(0)
-		game.right_saber.set_tail_size(0)
-		
-	if overwrite:
-		savedata.saber_tail = button_pressed
-		save_current_settings()
-	else:
-		$saber_tail.pressed = button_pressed
-
-
 func _on_glare_toggled(button_pressed,overwrite=true):
 	var env = get_tree().get_nodes_in_group("enviroment")[0]
 	env.environment.glow_enabled = button_pressed
@@ -139,3 +133,4 @@ func _on_wipe_check_timeout():
 			var dir = Directory.new()
 			dir.remove(config_path)
 			get_tree().change_scene("res://GameMain.tscn")
+

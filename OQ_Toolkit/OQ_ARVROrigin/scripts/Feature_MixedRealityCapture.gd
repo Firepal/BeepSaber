@@ -81,20 +81,20 @@ func _initialize():
 	if (!VisualServer.has_method("viewport_get_color_texture_id")):
 		vr.log_error("MixedRealityCapture currently requries a special build with the method 'VisualServer.viewport_get_color_texture_id'");
 
-	ovr_mrc = load("res://addons/godot_ovrmobile/OvrMRC.gdns");
-
-	if (ovr_mrc.library.get_current_library_path() != ""):
-		ovr_mrc = ovr_mrc.new()
-		ovr_mrc.initialize();
-
-		ovr_mrc.set_mrc_activation_mode(ovrmMediaMrcActivationMode.Automatic);
-
-		vr.log_info("ovr_mrc.get_mrc_activation_mode() = " + str(ovr_mrc.get_mrc_activation_mode()));
-
-		ovr_mrc.set_mrc_input_video_buffer_type(ovrmMediaInputVideoBufferType.TextureHandle);
-		ovr_mrc.set_mrc_audio_sample_rate(44000);
-	else:
-		ovr_mrc = null;
+#	ovr_mrc = load("res://addons/godot_ovrmobile/OvrMRC.gdns");
+#
+#	if (ovr_mrc.library.get_current_library_path() != ""):
+#		ovr_mrc = ovr_mrc.new()
+#		ovr_mrc.initialize();
+#
+#		ovr_mrc.set_mrc_activation_mode(ovrmMediaMrcActivationMode.Automatic);
+#
+#		vr.log_info("ovr_mrc.get_mrc_activation_mode() = " + str(ovr_mrc.get_mrc_activation_mode()));
+#
+#		ovr_mrc.set_mrc_input_video_buffer_type(ovrmMediaInputVideoBufferType.TextureHandle);
+#		ovr_mrc.set_mrc_audio_sample_rate(44000);
+#	else:
+	ovr_mrc = null;
 
 	initialized_once = true;
 

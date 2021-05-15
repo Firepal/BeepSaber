@@ -31,10 +31,8 @@ func burn_mark(position=Vector3(0,0,-50),type=0):
 	burn_mark_sprite.visible = true
 	is_out[type] = 0
 	
-	var newpos = Vector2(
-		(position.x+1)*256,
-		position.z*256
-	)
+	var newpos = Vector2(position.x+1,position.z)
+	newpos *= $Viewport.size*0.5
 	
 	burn_mark_sprite.position = newpos
 	

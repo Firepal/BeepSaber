@@ -1,3 +1,6 @@
+## Compiling
+Grab/compile the Godot Android templates, and use them in the "Custom Build" export settings. I cannot provide these templates myself as I have a custom build of Godot (don't tell reduz 👀)
+
 # Godot Beep Saber VR
 This is a basic implementation of the beat saber game mechanic for VR using the [Godot Game Engine](https://godotengine.org/) and the [Godot Oculus Quest Toolkit](https://github.com/NeoSpark314/godot_oculus_quest_toolkit). The main objective of this project is to show how a VR game can be implemented using
 the Godot game engine.
